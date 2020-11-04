@@ -3,7 +3,7 @@ from . import brand_slide, loader_slide
 def run(bg, vw, vh, vc, FPS):
     global processed_data
     brand_slide.run(bg, vw, vh, vc)
-    processed_data = loader_slide.run(bg, vw, vh, vc, FPS)
+    loader_slide.run(bg, vw, vh, vc, FPS)
 
 
 

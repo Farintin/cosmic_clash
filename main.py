@@ -3,9 +3,9 @@ from pygame.locals import *
 import boot, menu, levels
 import db
 from game.src.ui import display, features, dom
-from game.src import stars, controls, crafts
-from game.src.ui.colors import bg_color
-from game import Game
+#from game.src import stars, controls, crafts
+#from game.src.ui.colors import bg_color
+from game.main import Game
 
 
 ### Setup pygame/window ---------------------------------------- #
@@ -27,42 +27,23 @@ def main():
 
     Home = True
     Levels = False
-    Action = False
+    game = Game()
     while True:
         Home, Levels = menu.run(bg, bg_alpha, Home, Levels)
-        state = levels.render(bg, bg_alpha, Home, Levels, Action)
-        Level = state['level']
+        state = levels.render(bg, bg_alpha, Home, Levels, game.Play)
+        game.level = state['level']
         bools = state['bools']
         Levels = bools['self']
         Home = bools['home']
-        Action = bools['action']
+        game.Play = bools['play']
 
-        state = action(Level, Action, Levels)
-        game = state['game']
-        bools = state['bools']
-        Action = bools['self']
-        Levels = bools['levels']
-
-        if game:
-            features.updateCraftsUnit(game.craft.units)### Update units
+        game.play()
+        if not game.Play and not Home:
+            Levels = True 
+            game = Game()
 
 
-        ### Event loop block
-        for event in pygame.event.get():
-            kind = event.type
-
-            if kind == QUIT:
-                pygame.quit()
-                sys.exit()
-
-            if kind == KEYDOWN:
-                key = event.key
-                    
-        ### Blit updating
-        pygame.display.update()
-        FPSClock.tick(FPS)
-
-
+'''
 def action(Level, Action, Levels):
     game = None
     if Action:
@@ -161,9 +142,10 @@ def action(Level, Action, Levels):
                 'self': Action,
                 'levels': Levels
                 }
-            }
+            }'''
 
 
+'''
 def pause(Action, Pause, Levels):
     if Pause:
         Click = False
@@ -229,9 +211,9 @@ def pause(Action, Pause, Levels):
         pygame.display.update()
         FPSClock.tick(15)
     
-    return Action, Pause, Levels
+    return Action, Pause, Levels'''
 
-
+'''
 def over(Over, Action, Levels, game):
     if Over:
         timer = 0
@@ -289,8 +271,9 @@ def over(Over, Action, Levels, game):
             pygame.display.update()
             FPSClock.tick(15)
 
-    return Over, Action, Levels
+    return Over, Action, Levels'''
 
+'''
 def won(Level, Won, game):
     if Won:
         timer = 0
@@ -327,7 +310,7 @@ def won(Level, Won, game):
         pygame.display.update()
         FPSClock.tick(15)
     
-    return Won
+    return Won'''
 
 
 

@@ -2,7 +2,11 @@ import sys, random
 import pygame
 from pygame.locals import *
 from game.src import items
-from game.src.celest import Sprites
+from game.src.ui.display import *
+#from game.src.ui.sprites import Sprites
+
+
+
 
 
 FPSClock = pygame.time.Clock()
@@ -49,9 +53,10 @@ def run(bg, vw, vh, vc, FPS):
             #life = items.Life()
             #del life
         elif FPSsec_i == heavyLoadPoint2:
-            sprites = Sprites()
+            '''sprites = Sprites()
             sprites.load_rotated_sprites()
-            sprites.load_comet_outline()
+            sprites.load_comet_outline()'''
+            from game.src.ui import sprites
 
         ###333333333333333333333333333333333333333333333
 
@@ -65,7 +70,7 @@ def run(bg, vw, vh, vc, FPS):
 
         pygame.display.update()
         FPSClock.tick(FPS)
-    return {'sprites': sprites}
+    #return {'sprites': sprites}
 
 
 

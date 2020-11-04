@@ -1,10 +1,10 @@
 import pygame
-from .ui.display import view_width, view_height, view_center, FPSsec
+from .ui.display import *
 from .ui.colors import RED, YELLOW
 from .items import *
 from .explode import *
 import random
-import boot
+from .ui import sprites
 
 
 
@@ -26,7 +26,7 @@ class Bodies:
         self.time_range = (2,8)
         self.timer = self.time = random.randrange(self.time_range[0], self.time_range[1])
 
-        self.attacks_count = 0
+        self.attacks = 0
     
     def next(self):
         if self.timer >= self.time:
@@ -132,84 +132,11 @@ class Bodies:
                 self.body.choose_items()
                 self.bodies.append(self.body)
             
-            self.attacks_count += 1
-            #print(self.attacks_count, level.attacks)
+            self.attacks += 1
+            #print(self.attacks, level.attacks)
             self.time = random.randrange(self.time_range[0], self.time_range[1])
             self.timer = 0
         self.timer += FPSsec
-
-
-
-class Sprites:
-    def __init__(self):
-        self.mass1 = 1
-        self.mass2 = 1.3
-        self.mass3 = 1.6
-        self.masses =  [self.mass1, self.mass2, self.mass3]
-
-        meteorite = pygame.image.load('game/src/img/celest/meteorite.png').convert_alpha()
-        aspect_ratio = meteorite.get_width() / meteorite.get_height()
-        self.meteorite1 = pygame.transform.scale( meteorite, ( 55, round( 55 / aspect_ratio ) ) ).convert_alpha()
-        self.meteorite1_DIM = (self.meteorite1.get_width(), self.meteorite1.get_height())
-        self.meteorite2 = pygame.transform.scale( self.meteorite1, ( round(55 * self.mass2), round(55 / aspect_ratio * self.mass2) ) ).convert_alpha()
-        self.meteorite2_DIM = (self.meteorite2.get_width(), self.meteorite2.get_height())
-        self.meteorite3 = pygame.transform.scale( self.meteorite1, ( round(55 * self.mass3), round(55 / aspect_ratio * self.mass3) ) ).convert_alpha()
-        self.meteorite3_DIM = (self.meteorite3.get_width(), self.meteorite3.get_height())
-        self.meteorite_sprites = [self.meteorite1, self.meteorite2, self.meteorite3]
-
-        self.meteor1 = pygame.image.load('game/src/img/celest/meteor.png').convert_alpha()
-        self.meteor1_DIM = (self.meteor1.get_width(), self.meteor1.get_height())
-        self.meteor2 = pygame.transform.scale( self.meteor1, (round(self.meteor1.get_width() * self.mass2), round(self.meteor1.get_height() * self.mass2)) ).convert_alpha()
-        self.meteor2_DIM = (self.meteor2.get_width(), self.meteor2.get_height())
-        self.meteor3 = pygame.transform.scale( self.meteor1, (round(self.meteor1.get_width() * self.mass3), round(self.meteor1.get_height() * self.mass3)) ).convert_alpha()
-        self.meteor3_DIM = (self.meteor3.get_width(), self.meteor3.get_height())
-        self.meteor_sprites = [self.meteor1, self.meteor2, self.meteor3]
-
-        self.sprites = [self.meteorite_sprites, self.meteor_sprites]
-        self.rot_angle_rate = 1
-
-    def load_rotated_sprites(self):
-        all_sprites_data = []
-        for sprites in self.sprites:
-            body_rot_sprites_data = []
-
-            for sprite in sprites:
-                rot_sprites_data = []
-
-                for angle in range(0, 360, self.rot_angle_rate):
-                    img_rot = pygame.transform.rotate(sprite, angle)
-                    mask = pygame.mask.from_surface(img_rot)
-                    rot_sprites_data.append( [img_rot, [pt for pt in mask.outline()], (img_rot.get_width(), img_rot.get_height())] )
-
-                body_rot_sprites_data.append(rot_sprites_data)
-
-            all_sprites_data.append(body_rot_sprites_data)
-
-        self.meteorite_rotated_sprites_data1, self.meteorite_rotated_sprites_data2, self.meteorite_rotated_sprites_data3 = all_sprites_data[0]
-        self.meteor_rotated_sprites_data1, self.meteor_rotated_sprites_data2, self.meteor_rotated_sprites_data3 = all_sprites_data[1]
-
-    def load_comet_outline(self):
-        comets_outlines = []
-        for mass in self.masses:
-            surf = pygame.Surface((vw, vh))
-            surf = surf.convert_alpha()
-            surf.set_colorkey((0,0,0,0))
-            surf.fill((0,0,0,0))
-
-            w = 32 * mass
-            rad = round(w / 2)
-            pygame.draw.circle(surf, (255,255,255,255), (rad, rad), rad)
-            mask = pygame.mask.from_surface(surf)
-
-            outline = []
-            for pt in mask.outline():
-                outline.append( (pt[0], pt[1]) )
-            
-            comets_outlines.append(outline)
-
-        self.comet_outline1 = comets_outlines[0]
-        self.comet_outline2 = comets_outlines[1]
-        self.comet_outline3 = comets_outlines[2]
 
 
 
@@ -296,16 +223,16 @@ class Meteorite(Body):
 
         if mass == 0:
             self.mass = 1
-            self.DIM = boot.processed_data['sprites'].meteorite1_DIM
-            self.rotated_sprites_data = boot.processed_data['sprites'].meteorite_rotated_sprites_data1
+            self.DIM = sprites.sprites.meteorite1_DIM
+            self.rotated_sprites_data = sprites.sprites.meteorite_rotated_sprites_data1
         elif mass == 1:
             self.mass = 1.3
-            self.DIM = boot.processed_data['sprites'].meteorite2_DIM
-            self.rotated_sprites_data = boot.processed_data['sprites'].meteorite_rotated_sprites_data2
+            self.DIM = sprites.sprites.meteorite2_DIM
+            self.rotated_sprites_data = sprites.sprites.meteorite_rotated_sprites_data2
         elif mass == 2:
             self.mass = 1.6
-            self.DIM = boot.processed_data['sprites'].meteorite3_DIM
-            self.rotated_sprites_data = boot.processed_data['sprites'].meteorite_rotated_sprites_data3
+            self.DIM = sprites.sprites.meteorite3_DIM
+            self.rotated_sprites_data = sprites.sprites.meteorite_rotated_sprites_data3
 
         super().__init__(life, power)
         self.flaming = False
@@ -339,16 +266,16 @@ class Meteor(Body):
         self.sprite_format = 'image'
         if mass == 0:
             self.mass = 1
-            self.DIM = boot.processed_data['sprites'].meteor1_DIM
-            self.rotated_sprites_data = boot.processed_data['sprites'].meteor_rotated_sprites_data1
+            self.DIM = sprites.sprites.meteor1_DIM
+            self.rotated_sprites_data = sprites.sprites.meteor_rotated_sprites_data1
         elif mass == 1:
             self.mass = 1.3
-            self.DIM = boot.processed_data['sprites'].meteor2_DIM
-            self.rotated_sprites_data = boot.processed_data['sprites'].meteor_rotated_sprites_data2
+            self.DIM = sprites.sprites.meteor2_DIM
+            self.rotated_sprites_data = sprites.sprites.meteor_rotated_sprites_data2
         elif mass == 2:
             self.mass = 1.6
-            self.DIM = boot.processed_data['sprites'].meteor3_DIM
-            self.rotated_sprites_data = boot.processed_data['sprites'].meteor_rotated_sprites_data3
+            self.DIM = sprites.sprites.meteor3_DIM
+            self.rotated_sprites_data = sprites.sprites.meteor_rotated_sprites_data3
 
         super().__init__(life, power)
         self.flaming = True
@@ -402,13 +329,13 @@ class Comet(Body):
 
         if mass == 0:
             self.mass = 1
-            self.outline_lock = boot.processed_data['sprites'].comet_outline1
+            self.outline_lock = sprites.sprites.comet_outline1
         elif mass == 1:
             self.mass = 1.3
-            self.outline_lock = boot.processed_data['sprites'].comet_outline2
+            self.outline_lock = sprites.sprites.comet_outline2
         elif mass == 2:
             self.mass = 1.6
-            self.outline_lock = boot.processed_data['sprites'].comet_outline3
+            self.outline_lock = sprites.sprites.comet_outline3
         self.outline = []
         self.DIM = [32 * self.mass]*2
         #self.rad = round(self.w / 2)

@@ -571,4 +571,4 @@ def controls(bg, bg_alpha):
 if __name__ == '__main__':
     bg = display.BACKGROUND
     bg_alpha = display.bg_alpha
-    run(bg, bg_alpha)
+    run(bg, bg_alpha, True, False)

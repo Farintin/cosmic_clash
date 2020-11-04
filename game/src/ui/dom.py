@@ -104,6 +104,7 @@ class Container:
                 for handler in handlers:
                     bools.append(handler.passOn(self))
             return bools
+        return self.click
 
     def show(self, bg_alpha):
         if self.visible:

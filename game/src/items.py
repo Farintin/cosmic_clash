@@ -2,7 +2,7 @@ import pygame
 import pygame.gfxdraw
 from svg.path import Path, parse_path
 import math
-from .ui import colors
+from .ui import colors, display
 import db
 
 

@@ -1,18 +1,14 @@
 import pygame
 from pygame.locals import *
-from game.src.ui import display
+from game.src.ui.display import *
 from game.src.ui.dom import *
 from math import *
 import db
 
 
 
-
 FPSClock = pygame.time.Clock()
 
-vw = display.view_width
-vh = display.view_height
-vc = display.view_center
 
 bgImg = pygame.image.load('game/src/img/menu_bg.png')
 bgImg_rect = bgImg.get_rect()
@@ -58,9 +54,8 @@ class Level:
 
 
 
-def render(bg, bg_alpha, Home, Levels, Action):
+def render(bg, bg_alpha, Home, Levels, Play):
     selected = None
-
     if Levels:
         backBtn = Rect((8, 8, vw * 0.1, vw * 0.1), bgColor = (255,255,255,185))
         backBtn.borderWidth(2)
@@ -224,7 +219,7 @@ def render(bg, bg_alpha, Home, Levels, Action):
                     selected = stages[i]
                     #lvl.clicked = False
                     Levels = False
-                    Action = True
+                    Play = True
                     break
 
                 i += 1
@@ -276,10 +271,9 @@ def render(bg, bg_alpha, Home, Levels, Action):
             'bools': {
                 'home': Home,
                 'self': Levels,
-                'action': Action
+                'play': Play
             }
         }
-
 
 
 
@@ -358,6 +352,4 @@ def show_grids(bg_alpha, gridFrame):
 
 
 if __name__ == '__main__':
-    bg = display.BACKGROUND
-    bg_alpha = display.bg_alpha
-    render(bg, bg_alpha, True, True)
+    render(bg, bg_alpha, False, True, False)
